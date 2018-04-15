@@ -14,7 +14,7 @@ public class CarInfoContainer extends WebElementContainer {
     @FindBy(tagName = "a")
     private WebElement carNumber;
 
-    @FindBy(className = "s-type-seat")
+    @FindBy(xpath = ".//*[contains(@class, 's-type-seat') or contains(@class, 's-type-dn ') or contains(@class, 's-type-up')]")
     private List<WebElement> seatsList;
 
     public CarInfoContainer(WebDriver webDriver, WebElement webElement) {
@@ -30,6 +30,7 @@ public class CarInfoContainer extends WebElementContainer {
     }
 
     public void openCarInfo() {
+        waitForElementClickable(carNumber);
         carNumber.click();
     }
 

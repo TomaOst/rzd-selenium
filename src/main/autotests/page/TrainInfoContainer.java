@@ -4,6 +4,7 @@ import datamodel.CarInfo;
 import datamodel.TrainInfo;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import selenium.WebElementContainer;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TrainInfoContainer extends WebElementContainer {
-    @FindBy(xpath = ".//*[@class='route-carType-item']")
+    @FindBy(css = ".route-carType-item .move_tooltip")
     private List<WebElement> carTypeContainers;
 
     @FindBy(className = "route-cars-wrap")
@@ -60,7 +61,7 @@ public class TrainInfoContainer extends WebElementContainer {
     private void selectCarType(String carType) {
         for (WebElement carTypeContainer : carTypeContainers) {
             if (carTypeContainer.getText().contains(carType)) {
-                carTypeContainer.click();
+               carTypeContainer.click();
             }
         }
     }

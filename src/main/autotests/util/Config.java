@@ -29,6 +29,10 @@ public class Config {
         return properties.getProperty("chromeDriverPath");
     }
 
+    public String getGeckoDriverPath(){
+        return properties.getProperty("geckoDriverPath");
+    }
+
     public String getWebsiteUrl() {
         return properties.getProperty("websiteUrl");
     }

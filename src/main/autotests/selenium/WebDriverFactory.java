@@ -11,7 +11,7 @@ public class WebDriverFactory {
             case CHROME:
                 return createChrome(config);
             case FIREFOX:
-                return createFirefox();
+                return createFirefox(config);
             default:
                 throw new Exception("Incorrect browser");
         }
@@ -22,7 +22,8 @@ public class WebDriverFactory {
         return new ChromeDriver();
     }
 
-    private static WebDriver createFirefox() {
+    private static WebDriver createFirefox(Config config) {
+        System.setProperty("webdriver.gecko.driver", config.getGeckoDriverPath());
         return new FirefoxDriver();
     }
 }
