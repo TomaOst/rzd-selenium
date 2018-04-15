@@ -1,14 +1,16 @@
 package testsuite;
 
 import datamodel.CarType;
+import datamodel.SeatInfo;
 import datamodel.TrainInfo;
+import org.junit.Assert;
 import org.junit.Test;
 import page.MainPassPage;
 import page.TicketsPage;
 
 public class MainPassTestsSuite extends TestSetup {
     @Test
-    public void testTicketSelection() {
+    public void checkAllPresentedCarsHaveFreeSeats() {
         MainPassPage mainPassPage = new MainPassPage(webDriver);
         mainPassPage.init();
         mainPassPage.searchTickets("Москва", "Тула", "18.04.2018");
@@ -17,5 +19,7 @@ public class MainPassTestsSuite extends TestSetup {
         ticketsPage.init();
         ticketsPage.waitForLoad();
         TrainInfo trainByNumber = ticketsPage.getTrainInfoByNumberAndCarType("119А", CarType.STATEROOM);
+        Assert.assertTrue(trainByNumber.getCars().stream().anyMatch(car ->
+                car.getSeats().stream().anyMatch(SeatInfo::isSeatFree)));
     }
 }
