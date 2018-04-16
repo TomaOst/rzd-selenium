@@ -17,8 +17,8 @@ public class CarInfoContainer extends WebElementContainer {
     @FindBy(xpath = ".//*[contains(@class, 's-type-seat') or contains(@class, 's-type-dn ') or contains(@class, 's-type-up')]")
     private List<WebElement> seatsList;
 
-    public CarInfoContainer(WebDriver webDriver, WebElement webElement) {
-        super(webDriver, webElement);
+    public CarInfoContainer(WebElement webElement, WebDriver webDriver) {
+        super(webElement, webDriver);
     }
 
     public CarInfo getCarInfo() {

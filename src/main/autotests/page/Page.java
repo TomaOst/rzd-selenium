@@ -5,6 +5,6 @@ import selenium.WebElementContainer;
 
 public class Page extends WebElementContainer {
     public Page(WebDriver webDriver) {
-        super(webDriver, null);
+        super(null, webDriver);
     }
 }

@@ -3,6 +3,9 @@ package page;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import selenium.Button;
+import selenium.CalendarTextField;
+import selenium.TextField;
 
 public class MainPassPage extends Page {
     public MainPassPage(WebDriver webDriver) {
@@ -10,36 +13,34 @@ public class MainPassPage extends Page {
     }
 
     @FindBy(id = "name0")
-    private WebElement departureStationField;
+    private TextField departureStationField;
 
     @FindBy(id = "name1")
-    private WebElement arrivalStationField;
+    private TextField arrivalStationField;
 
     @FindBy(id = "date0")
-    private WebElement departureDateField;
+    private CalendarTextField departureDateField;
 
     @FindBy(id = "date1")
-    private WebElement departureBackDateField;
+    private CalendarTextField departureBackDateField;
 
     @FindBy(id = "Submit")
-    private WebElement buyTicketButton;
+    private Button buyTicketButton;
 
     public void fillDepartureStationField(String departureStation) {
-        departureStationField.sendKeys(departureStation);
+        departureStationField.fill(departureStation);
     }
 
     public void fillArrivalStationField(String arrivalStation) {
-        arrivalStationField.sendKeys(arrivalStation);
+        arrivalStationField.fill(arrivalStation);
     }
 
     public void fillDepartureDateField(String departureDate) {
-        departureDateField.clear();
-        departureDateField.sendKeys(departureDate);
+        departureDateField.fill(departureDate);
     }
 
     public void fillDepartureBackDateField(String departureBackDate) {
-        departureBackDateField.clear();
-        departureBackDateField.sendKeys(departureBackDate);
+        departureBackDateField.fill(departureBackDate);
     }
 
     public void clickOnBuyTickets() {

@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 import selenium.WebElementContainer;
 
 public class PopupCalendar extends WebElementContainer {
-    public PopupCalendar(WebDriver webDriver, WebElement webElement) {
-        super(webDriver, webElement);
+    public PopupCalendar(WebElement webElement, WebDriver webDriver) {
+        super(webElement, webDriver);
     }
 }

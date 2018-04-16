@@ -4,7 +4,6 @@ import datamodel.CarInfo;
 import datamodel.TrainInfo;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import selenium.WebElementContainer;
 
@@ -24,8 +23,8 @@ public class TrainInfoContainer extends WebElementContainer {
     @FindBy(className = "route-trnum")
     private WebElement trainNumber;
 
-    public TrainInfoContainer(WebDriver webDriver, WebElement webElement) {
-        super(webDriver, webElement);
+    public TrainInfoContainer(WebElement webElement, WebDriver webDriver) {
+        super(webElement, webDriver);
     }
 
     public String getTrainNumber() {
@@ -34,19 +33,15 @@ public class TrainInfoContainer extends WebElementContainer {
 
     public TrainInfo getTrainInfoByCarType(String carType) {
         selectCarType(carType);
-        waitForElementVisible(carsListContainer);
         return new TrainInfo(getTrainNumber(), getCarsInfo());
     }
 
-    public CarInfo getCarInfoByNumber(String carNumber) {
-        CarInfo carInfo = null;
-        for (CarInfoContainer car : carsList) {
-            if (car.getCarNumber().equals(carNumber)) {
-                car.openCarInfo();
-                carInfo = car.getCarInfo();
-            }
-        }
-        return carInfo;
+    public CarInfo getCarInfoByNumber(String carNumber, String carType) {
+        selectCarType(carType);
+        CarInfoContainer targetCar = carsList.stream().filter(car ->
+                car.getCarNumber().equals(carNumber)).findFirst().get();
+        targetCar.openCarInfo();
+        return targetCar.getCarInfo();
     }
 
     public List<CarInfo> getCarsInfo() {
@@ -61,7 +56,8 @@ public class TrainInfoContainer extends WebElementContainer {
     private void selectCarType(String carType) {
         for (WebElement carTypeContainer : carTypeContainers) {
             if (carTypeContainer.getText().contains(carType)) {
-               carTypeContainer.click();
+                carTypeContainer.click();
+                waitForElementVisible(carsListContainer);
             }
         }
     }

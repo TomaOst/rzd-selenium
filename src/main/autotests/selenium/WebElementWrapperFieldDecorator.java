@@ -11,17 +11,17 @@ import java.lang.reflect.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class WebElementContainerFieldDecorator extends DefaultFieldDecorator {
+public class WebElementWrapperFieldDecorator extends DefaultFieldDecorator {
     private final WebDriver webDriver;
 
-    public WebElementContainerFieldDecorator(SearchContext searchContext, WebDriver webDriver) {
+    public WebElementWrapperFieldDecorator(SearchContext searchContext, WebDriver webDriver) {
         super(new DefaultElementLocatorFactory(searchContext));
         this.webDriver = webDriver;
     }
 
     @Override
     public Object decorate(ClassLoader loader, Field field) {
-        Object complexWebElement = getComplexWebElement(loader, field);
+        Object complexWebElement = getWebElementWrapper(loader, field);
         if (complexWebElement != null) {
             return complexWebElement;
         } else {
@@ -30,7 +30,7 @@ public class WebElementContainerFieldDecorator extends DefaultFieldDecorator {
     }
 
     @SuppressWarnings("unchecked")
-    private Object getComplexWebElement(ClassLoader loader, Field field) {
+    private Object getWebElementWrapper(ClassLoader loader, Field field) {
         Class<?> fieldClass = field.getType();
         ElementLocator locator = factory.createLocator(field);
         if (locator != null) {
@@ -38,46 +38,46 @@ public class WebElementContainerFieldDecorator extends DefaultFieldDecorator {
                 Type genericType = field.getGenericType();
                 if (genericType instanceof ParameterizedType) {
                     Class<?> listElementClass = (Class<?>) ((ParameterizedType) genericType).getActualTypeArguments()[0];
-                    if (WebElementContainer.class.isAssignableFrom(listElementClass)) {
-                        return createList(loader, locator, (Class<WebElementContainer>) listElementClass);
+                    if (WebElementWrapper.class.isAssignableFrom(listElementClass)) {
+                        return createList(loader, locator, (Class<WebElementWrapper>) listElementClass);
                     }
                 }
-            } else if (WebElementContainer.class.isAssignableFrom(fieldClass)) {
-                return createElement(loader, locator, (Class<WebElementContainer>) fieldClass);
+            } else if (WebElementWrapper.class.isAssignableFrom(fieldClass)) {
+                return createElement(loader, locator, (Class<WebElementWrapper>) fieldClass);
             }
         }
         return null;
     }
 
-    private WebElementContainer createElement(ClassLoader loader, ElementLocator locator, Class<WebElementContainer> clazz) {
+    private WebElementWrapper createElement(ClassLoader loader, ElementLocator locator, Class<WebElementWrapper> clazz) {
         WebElement webElement = proxyForLocator(loader, locator);
         try {
-            return newComplexWebElementInstance(clazz, webElement);
+            return newWebElementWrapperInstance(clazz, webElement);
         } catch (Exception e) {
             throw new RuntimeException("Can't create complex web element", e);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private List<WebElementContainer> createList(ClassLoader loader, ElementLocator locator, Class<WebElementContainer> clazz) {
+    private List<WebElementWrapper> createList(ClassLoader loader, ElementLocator locator, Class<WebElementWrapper> clazz) {
         return (List) Proxy.newProxyInstance(loader, new Class[]{List.class}, (proxy, method, args) -> {
             List<WebElement> webElements = locator.findElements();
-            List<WebElementContainer> webElementContainers =
-                    webElements.stream().map(we -> newComplexWebElementInstance(clazz, we)).collect(Collectors.toList());
+            List<WebElementWrapper> WebElementWrappers =
+                    webElements.stream().map(we -> newWebElementWrapperInstance(clazz, we)).collect(Collectors.toList());
             try {
-                return method.invoke(webElementContainers, args);
+                return method.invoke(WebElementWrappers, args);
             } catch (InvocationTargetException e) {
                 throw e.getCause();
             }
         });
     }
 
-    private WebElementContainer newComplexWebElementInstance(Class<WebElementContainer> clazz, WebElement webElement) {
+    private WebElementWrapper newWebElementWrapperInstance(Class<WebElementWrapper> clazz, WebElement webElement) {
         try {
-            WebElementContainer webElementContainer =
-                    clazz.getConstructor(WebDriver.class, WebElement.class).newInstance(webDriver, webElement);
-            webElementContainer.init();
-            return webElementContainer;
+            WebElementWrapper webElementWrapper =
+                    clazz.getConstructor(WebElement.class, WebDriver.class).newInstance(webElement, webDriver);
+            webElementWrapper.init();
+            return webElementWrapper;
         } catch (Exception e) {
             throw new RuntimeException("Can't create complex web element for class " + clazz, e);
         }

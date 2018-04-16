@@ -1,5 +1,6 @@
 package page;
 
+import datamodel.CarInfo;
 import datamodel.TrainInfo;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -19,12 +20,17 @@ public class TicketsPage extends Page {
     }
 
     public TrainInfo getTrainInfoByNumberAndCarType(String trainNumber, String carType) {
+        TrainInfoContainer t = getTrainByNumber(trainNumber);
+        return getTrainByNumber(trainNumber).getTrainInfoByCarType(carType);
+    }
+
+    public CarInfo getCarInfoByNumberAndCarType(String trainNumber, String carNumber, String carType) {
+        return getTrainByNumber(trainNumber).getCarInfoByNumber(carNumber, carType);
+    }
+
+    private TrainInfoContainer getTrainByNumber(String trainNumber) {
         waitForElementVisible(trainsListContainer);
-        for (TrainInfoContainer train : trainsList) {
-            if (train.getTrainNumber().equals(trainNumber)) {
-                return train.getTrainInfoByCarType(carType);
-            }
-        }
-        return null;
+        return trainsList.stream().filter(train ->
+                train.getTrainNumber().equals(trainNumber)).findFirst().get();
     }
 }
