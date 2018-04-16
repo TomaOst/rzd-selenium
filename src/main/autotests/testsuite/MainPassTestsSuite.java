@@ -24,7 +24,7 @@ public class MainPassTestsSuite extends TestSetup {
         initMainPassPage().searchTickets("Москва", "Тула", "18.04.2018");
 
         CarInfo currentCur = initTicketsPage().getCarInfoByNumberAndCarType("119А", "11", CarType.STATEROOM);
-        Assert.assertEquals(27, currentCur.getSeats().stream().filter(SeatInfo::isSeatFree).count());
+        Assert.assertEquals(15, currentCur.getSeats().stream().filter(SeatInfo::isSeatFree).count());
     }
 
 

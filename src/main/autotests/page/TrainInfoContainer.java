@@ -39,7 +39,7 @@ public class TrainInfoContainer extends WebElementContainer {
     public CarInfo getCarInfoByNumber(String carNumber, String carType) {
         selectCarType(carType);
         CarInfoContainer targetCar = carsList.stream().filter(car ->
-                car.getCarNumber().equals(carNumber)).findFirst().get();
+                car.getCarNumber().contains(carNumber)).findFirst().get();
         targetCar.openCarInfo();
         return targetCar.getCarInfo();
     }
